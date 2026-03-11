@@ -29,6 +29,7 @@ safe-outputs:
     max: 1
     if-no-changes: "warn"
     fallback-as-issue: true
+    protected-files: fallback-to-issue
 
 engine: codex
 ---
