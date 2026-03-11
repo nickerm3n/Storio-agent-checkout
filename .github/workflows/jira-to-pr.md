@@ -30,7 +30,7 @@ safe-outputs:
     if-no-changes: "warn"
     fallback-as-issue: true
 
-engine: copilot
+engine: codex
 ---
 
 # Jira → Pull Request (Tech Debt Agent)
@@ -48,6 +48,7 @@ You are an AI coding agent. When this workflow runs, you receive a task that ori
 - **Jira key:** ${{ github.event.inputs.jira_key }}
 - **Title:** ${{ github.event.inputs.title }}
 - **Description / Acceptance criteria:**
+
 ```
 ${{ github.event.inputs.description }}
 ```
