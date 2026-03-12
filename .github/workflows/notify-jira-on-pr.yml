@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           title="${{ github.event.pull_request.title }}"
-          if [[ "$title" =~ ([A-Z]+-[0-9]+) ]]; then
+          if [[ "$title" =~ (BUY-[0-9]+) ]]; then
             echo "jira_key=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
           else
             echo "No Jira key found in title: $title"
@@ -35,7 +35,7 @@ jobs:
           JIRA_KEY: ${{ steps.extract.outputs.jira_key }}
         run: |
           # TODO: Replace 61 with the real transition id for "Code Review"
-          TRANSITION_ID=61
+          TRANSITION_ID=2
 
           curl -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
             -H "Content-Type: application/json" \
