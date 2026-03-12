@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           title="${{ github.event.pull_request.title }}"
-          if [[ "$title" =~ (BUY-[0-9]+) ]]; then
+          if [[ "$title" =~ (DEV-[0-9]+) ]]; then
             echo "jira_key=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
           else
             echo "No Jira key found in title: $title"
@@ -29,7 +29,7 @@ jobs:
       - name: Transition Jira issue to Code Review
         if: steps.extract.outputs.jira_key != ''
         env:
-          JIRA_BASE_URL: https://your-domain.atlassian.net
+          JIRA_BASE_URL: https://agent-ai-poc.atlassian.net
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_KEY: ${{ steps.extract.outputs.jira_key }}
