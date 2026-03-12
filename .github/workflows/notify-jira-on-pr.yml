@@ -1,0 +1,64 @@
+name: Notify Jira on PR
+
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main
+      - develop
+      - "feature/**"
+
+jobs:
+  notify-jira:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract Jira key from PR title
+        id: extract
+        shell: bash
+        run: |
+          title="${{ github.event.pull_request.title }}"
+          if [[ "$title" =~ ([A-Z]+-[0-9]+) ]]; then
+            echo "jira_key=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          else
+            echo "No Jira key found in title: $title"
+            echo "jira_key=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Transition Jira issue to Code Review
+        if: steps.extract.outputs.jira_key != ''
+        env:
+          JIRA_BASE_URL: https://your-domain.atlassian.net
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_KEY: ${{ steps.extract.outputs.jira_key }}
+        run: |
+          # TODO: Replace 61 with the real transition id for "Code Review"
+          TRANSITION_ID=61
+
+          curl -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -X POST "$JIRA_BASE_URL/rest/api/3/issue/$JIRA_KEY/transitions" \
+            -d "{\"transition\": {\"id\": \"$TRANSITION_ID\"}}"
+
+      - name: Post comment to Jira issue
+        if: steps.extract.outputs.jira_key != ''
+        env:
+          JIRA_BASE_URL: https://your-domain.atlassian.net
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_KEY: ${{ steps.extract.outputs.jira_key }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          body="Pull request created for this issue:\n\n- Title: $PR_TITLE\n- Link: $PR_URL\n\nThe GitHub Agentic Workflow has prepared this PR for code review."
+
+          # Escape double quotes for JSON payload
+          escaped_body=${body//\"/\\\"}
+
+          curl -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -X POST "$JIRA_BASE_URL/rest/api/3/issue/$JIRA_KEY/comment" \
+            -d "{\"body\": \"${escaped_body}\"}"
+
