@@ -34,7 +34,6 @@ jobs:
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_KEY: ${{ steps.extract.outputs.jira_key }}
         run: |
-          # TODO: Replace 61 with the real transition id for "Code Review"
           TRANSITION_ID=2
 
           curl -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
