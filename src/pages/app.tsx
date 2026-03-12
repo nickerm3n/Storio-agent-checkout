@@ -1,6 +1,8 @@
-import React from "react"
+import React, { useState } from "react"
 
 export function App() {
+  const [detailsVisible, setDetailsVisible] = useState(false)
+
   return (
     <div className="page">
       <header className="page-header">
@@ -27,6 +29,19 @@ export function App() {
             <li>Vite as the build tool</li>
             <li>Ready to move into a separate repository</li>
           </ul>
+          <button
+            type="button"
+            className="details-toggle"
+            onClick={() => setDetailsVisible((current) => !current)}
+          >
+            {detailsVisible ? "Hide details" : "Show details"}
+          </button>
+          {detailsVisible ? (
+            <p className="details-text">
+              This sandbox is intentionally small so tests can run quickly in
+              CI and stay easy to maintain.
+            </p>
+          ) : null}
         </section>
       </main>
     </div>
