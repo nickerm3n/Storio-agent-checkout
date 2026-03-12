@@ -31,7 +31,7 @@ safe-outputs:
     fallback-as-issue: true
     protected-files: allowed
 
-engine: codex
+engine: copilot
 ---
 
 # Jira → Pull Request (Tech Debt Agent)
