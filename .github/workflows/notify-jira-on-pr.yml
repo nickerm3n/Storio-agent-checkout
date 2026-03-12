@@ -38,7 +38,7 @@ jobs:
 
           curl -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
             -H "Content-Type: application/json" \
-            -X POST "$JIRA_BASE_URL/rest/api/3/issue/$JIRA_KEY/transitions" \
+            -X POST "$JIRA_BASE_URL/rest/api/2/issue/$JIRA_KEY/transitions" \
             -d "{\"transition\": {\"id\": \"$TRANSITION_ID\"}}"
 
       - name: Post comment to Jira issue
@@ -58,5 +58,5 @@ jobs:
 
           curl -u "$JIRA_EMAIL:$JIRA_API_TOKEN" \
             -H "Content-Type: application/json" \
-            -X POST "$JIRA_BASE_URL/rest/api/3/issue/$JIRA_KEY/comment" \
+            -X POST "$JIRA_BASE_URL/rest/api/2/issue/$JIRA_KEY/comment" \
             -d "{\"body\": \"${escaped_body}\"}"
