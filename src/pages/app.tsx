@@ -1,6 +1,13 @@
 import React from "react"
+import {
+  checkoutFeatureItems,
+  checkoutStatusMessage,
+  toggleDetailsVisibility
+} from "../services/checkout-flow.mjs"
 
 export function App() {
+  const [detailsVisible, setDetailsVisible] = React.useState(false)
+
   return (
     <div className="page">
       <header className="page-header">
@@ -18,14 +25,24 @@ export function App() {
             Single-page view without routing. Next steps: plug in agent actions
             such as reading Jira issues and generating pull requests.
           </p>
+          <button
+            className="details-toggle"
+            type="button"
+            onClick={() => setDetailsVisible((value) => toggleDetailsVisibility(value))}
+          >
+            {detailsVisible ? "Hide checkout details" : "Show checkout details"}
+          </button>
+          {detailsVisible ? (
+            <p className="details-panel">{checkoutStatusMessage}</p>
+          ) : null}
         </section>
 
         <section className="card">
           <h2>Technical details</h2>
           <ul className="list">
-            <li>React 18 + TypeScript</li>
-            <li>Vite as the build tool</li>
-            <li>Ready to move into a separate repository</li>
+            {checkoutFeatureItems.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </section>
       </main>
