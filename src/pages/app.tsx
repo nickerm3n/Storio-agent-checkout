@@ -1,6 +1,37 @@
-import React from "react"
+import React, { useMemo, useState } from "react"
+import {
+  createCheckoutSummary,
+  formatUsd,
+  togglePromoCode,
+  type CheckoutItem
+} from "./checkout-model"
+
+const CHECKOUT_ITEMS: CheckoutItem[] = [
+  {
+    id: "starter-plan",
+    name: "Starter Plan",
+    unitPriceCents: 4900,
+    quantity: 1
+  },
+  {
+    id: "priority-support",
+    name: "Priority Support",
+    unitPriceCents: 1500,
+    quantity: 1
+  }
+]
 
 export function App() {
+  const [promoCode, setPromoCode] = useState<string | null>(null)
+
+  const summary = useMemo(() => {
+    return createCheckoutSummary(CHECKOUT_ITEMS, promoCode)
+  }, [promoCode])
+
+  function handlePromoToggle() {
+    setPromoCode((currentCode) => togglePromoCode(currentCode))
+  }
+
   return (
     <div className="page">
       <header className="page-header">
@@ -13,11 +44,20 @@ export function App() {
 
       <main className="page-main">
         <section className="card">
-          <h2>Current status</h2>
-          <p>
-            Single-page view without routing. Next steps: plug in agent actions
-            such as reading Jira issues and generating pull requests.
-          </p>
+          <h2>Checkout summary</h2>
+          <ul className="list">
+            {CHECKOUT_ITEMS.map((item) => (
+              <li key={item.id}>
+                {item.name}: {formatUsd(item.unitPriceCents * item.quantity)}
+              </li>
+            ))}
+            <li>Subtotal: {formatUsd(summary.subtotalCents)}</li>
+            <li>Discount: {formatUsd(summary.discountCents)}</li>
+            <li>Total: {formatUsd(summary.totalCents)}</li>
+          </ul>
+          <button onClick={handlePromoToggle}>
+            {summary.promoCode ? "Remove promo code" : "Apply SAVE10 promo"}
+          </button>
         </section>
 
         <section className="card">
