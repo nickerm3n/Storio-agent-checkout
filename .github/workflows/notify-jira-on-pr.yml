@@ -45,7 +45,7 @@ jobs:
       - name: Post comment to Jira issue
         if: steps.extract.outputs.jira_key != ''
         env:
-          JIRA_BASE_URL: https://your-domain.atlassian.net
+          JIRA_BASE_URL: https://agent-ai-poc.atlassian.net
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_KEY: ${{ steps.extract.outputs.jira_key }}
@@ -61,4 +61,3 @@ jobs:
             -H "Content-Type: application/json" \
             -X POST "$JIRA_BASE_URL/rest/api/3/issue/$JIRA_KEY/comment" \
             -d "{\"body\": \"${escaped_body}\"}"
-
