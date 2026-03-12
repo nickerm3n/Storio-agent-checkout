@@ -1,31 +1,34 @@
 import React from "react"
+import { checkoutPageContent, getCheckoutCard } from "./checkout-content.mjs"
 
 export function App() {
+  const statusCard = getCheckoutCard("Current status")
+  const detailsCard = getCheckoutCard("Technical details")
+
+  if (!statusCard || !detailsCard || !detailsCard.items) {
+    throw new Error("Checkout page content is missing required cards")
+  }
+
   return (
     <div className="page">
       <header className="page-header">
-        <span className="badge">PoC</span>
-        <h1>Checkout Agent Sandbox</h1>
-        <p className="subtitle">
-          Minimal React + Vite app for experimenting with agentic workflows.
-        </p>
+        <span className="badge">{checkoutPageContent.badge}</span>
+        <h1>{checkoutPageContent.title}</h1>
+        <p className="subtitle">{checkoutPageContent.subtitle}</p>
       </header>
 
       <main className="page-main">
         <section className="card">
-          <h2>Current status</h2>
-          <p>
-            Single-page view without routing. Next steps: plug in agent actions
-            such as reading Jira issues and generating pull requests.
-          </p>
+          <h2>{statusCard.heading}</h2>
+          <p>{statusCard.description}</p>
         </section>
 
         <section className="card">
-          <h2>Technical details</h2>
+          <h2>{detailsCard.heading}</h2>
           <ul className="list">
-            <li>React 18 + TypeScript</li>
-            <li>Vite as the build tool</li>
-            <li>Ready to move into a separate repository</li>
+            {detailsCard.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </section>
       </main>
