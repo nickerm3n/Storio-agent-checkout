@@ -43,7 +43,7 @@ mcp-servers:
       - add_comment
       - transition_issue
 
-engine: codex
+engine: claude
 ---
 
 # Jira → Pull Request (Orchestrator + Development)
@@ -94,7 +94,7 @@ ${{ github.event.inputs.description }}
 6. **Final Jira update via MCP** — Use the **Jira MCP server**:
    - **add_comment** — `[Orchestrator — PR]` Pull request created: [title](link). Moving to Code Review.
    - **transition_issue** — Move the issue to "Code Review" (transition id `2` if the tool requires it).
-   If Jira MCP fails, note it in the PR description; a separate workflow may still post to Jira as fallback.
+     If Jira MCP fails, note it in the PR description; a separate workflow may still post to Jira as fallback.
 
 7. If the task cannot be done (blocker, missing info), explain in the PR description and still open the PR (fallback-as-issue may apply). Optionally post a Jira comment that the task could not be completed and why.
 
