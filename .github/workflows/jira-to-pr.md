@@ -43,6 +43,12 @@ mcp-servers:
       - add_comment
       - transition_issue
 
+# Allow Jira MCP to call Atlassian API (otherwise add_comment/transition_issue are blocked by sandbox)
+network:
+  allowed:
+    - defaults
+    - "*.atlassian.net"
+
 engine: claude
 ---
 
