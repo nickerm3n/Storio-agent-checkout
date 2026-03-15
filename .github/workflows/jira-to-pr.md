@@ -43,7 +43,7 @@ mcp-servers:
       - add_comment
       - transition_issue
 
-engine: claude
+engine: codex
 ---
 
 # Jira → Pull Request (Orchestrator + Development)
@@ -72,19 +72,19 @@ ${{ github.event.inputs.description }}
 
 ## Your run
 
-The **orchestrator must leave a comment in the Jira ticket after each phase** (via Jira MCP `add_comment`), so the ticket shows what each phase did.
+**CRITICAL — Jira comments per phase:** You MUST call the Jira MCP tool **add_comment** (with the jira_key from inputs) **immediately after each** of steps 1–4, **before** moving to the next step. Do not batch all comments at the end. The ticket must show 4–5 separate comments (Classify, optional Plan, Development, Quality, PR). If you skip a comment, the run is incomplete.
 
-1. **Classify** — Using the orchestrator, decide: simple feature / bug fix / unclear scope / docs-only.  
-   → **Comment in Jira:** `[Orchestrator — Classify]` + classification result (e.g. "Task classified as: Simple feature. Proceeding to implementation.").
+1. **Classify** — Decide: simple feature / bug fix / unclear scope / docs-only.  
+   → **Right away:** Call **add_comment** for this issue (jira_key = ${{ github.event.inputs.jira_key }}): `[Orchestrator — Classify]` + classification result. **Do not proceed to step 2 or 3 until this comment is posted.**
 
-2. **Plan (if needed)** — If scope is vague or missing criteria, write 2–3 sentences of what you will deliver and where in the repo.  
-   → **Comment in Jira:** `[Orchestrator — Plan]` + short plan summary.
+2. **Plan (if needed)** — If scope is vague, write 2–3 sentences of what you will deliver and where.  
+   → **Right away:** Call **add_comment**: `[Orchestrator — Plan]` + plan summary. **Do not proceed to step 3 until this comment is posted.**
 
-3. **Implement** — Follow Development agent: locate code, implement acceptance criteria, fix failures.  
-   → **Comment in Jira:** `[Orchestrator — Development]` + what was implemented (files, acceptance criteria covered).
+3. **Implement** — Follow Development agent: implement acceptance criteria, fix failures.  
+   → **Right away:** Call **add_comment**: `[Orchestrator — Development]` + what was implemented (files, summary). **Do not proceed to step 4 until this comment is posted.**
 
-4. **Quality** — Follow Quality agent: run lint, test, build (existing scripts); summarize pass/fail.  
-   → **Comment in Jira:** `[Orchestrator — Quality]` + result (e.g. "Lint: pass. Test: pass. Build: pass. Quality gate: passed.").
+4. **Quality** — Run lint, test, build (existing scripts); summarize pass/fail.  
+   → **Right away:** Call **add_comment**: `[Orchestrator — Quality]` + result (e.g. "Lint: pass. Test: pass. Build: pass."). **Do not proceed to step 5 until this comment is posted.**
 
 5. **Create PR** — Use the create-pull-request safe output:
    - Branch: e.g. `jira/${{ github.event.inputs.jira_key }}-add-header`.
@@ -115,6 +115,6 @@ The **orchestrator must leave a comment in the Jira ticket after each phase** (v
 - **CLI:** `gh workflow run "jira-to-pr.lock.yml" -f jira_key=BUY-505 -f title="Add tests" -f description="Add unit tests for checkout"`  
   Or: `gh aw run jira-to-pr` (if your gh-aw version supports passing inputs).
 
-**Engine:** This workflow uses `engine: claude`. Set the **ANTHROPIC_API_KEY** secret in the repo (Settings → Secrets → Actions) so the agent can call Claude.
+**Engine:** Uses `engine: codex` (GitHub Copilot). For Claude instead, set `engine: claude` and **ANTHROPIC_API_KEY** secret (Anthropic account must have credits).
 
 **Jira MCP:** The agent posts a comment and transitions the ticket via the Jira MCP server (`add_comment`, `transition_issue`). Ensure repo secrets `JIRA_EMAIL` and `JIRA_API_TOKEN` are set (same as for `notify-jira-on-pr`). If you want only MCP (no duplicate), you can disable the "Notify Jira on PR" workflow or remove the comment/transition steps from it.

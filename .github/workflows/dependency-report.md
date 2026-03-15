@@ -27,6 +27,7 @@ engine: claude
 # Dependency Report (PoC)
 
 You are an AI agent. When this workflow runs, you must:
+
 1. Produce a **dependency audit report** and publish it as a **GitHub Issue**.
 2. If there are safe dependency updates (patch/minor or auto-fixable audit), open a **Pull Request** with those updates.
 
@@ -48,15 +49,19 @@ Use this structure for the issue:
 **Branch:** ${{ github.event.repository.default_branch }}
 
 ### Outdated packages
+
 (List or table: name, current, wanted, latest)
 
 ### Vulnerabilities (if any)
+
 (Count by severity; list high/critical)
 
 ### PR opened?
+
 (Yes — a PR was created by this run; see Actions run for link. | No — no safe updates / only major / audit not auto-fixable.)
 
 ### Notes
+
 (Errors or "No issues found.")
 ```
 

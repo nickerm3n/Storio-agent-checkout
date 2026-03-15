@@ -22,17 +22,19 @@ Jira task (title + description)
 5. Create PR         → post final comment + transition (MCP)
 ```
 
-## Comments in Jira (orchestrator)
+## ⛔ MANDATORY: Comment in Jira after EVERY phase
 
-After **each phase**, leave a comment on the Jira issue using the **Jira MCP** tool `add_comment`. So the ticket gets a visible log of what each "agent" (phase) did.
+You **MUST** call the Jira MCP tool **add_comment** after **each** phase below, using the **jira_key** from the workflow inputs. Do **not** skip any comment. Do **not** wait until the end to post all comments. The ticket must show separate comments for: Classify → (Plan if any) → Development → Quality → PR.
 
-- **After Classify:** One comment with classification result (e.g. "Task classified as: Simple feature / UI. Proceeding to implementation.").
-- **After Plan (if you did a plan):** One comment with the short plan (what you will deliver, where in the repo).
-- **After Implement:** One comment summarizing what was implemented (files changed, acceptance criteria covered).
-- **After Quality:** One comment with Quality phase result (lint/test/build pass or fail; see Quality agent instructions).
-- **After Create PR:** One comment with PR title, link, and that the issue was moved to Code Review; then call `transition_issue`.
+**Order of operations:** Complete one phase → **immediately** call `add_comment` with the jira_key and the text for that phase → **only then** proceed to the next phase. If you do not post a comment after a phase, the run is incomplete.
 
-Use clear labels in each comment: `[Orchestrator — Classify]`, `[Orchestrator — Plan]`, `[Orchestrator — Development]`, `[Orchestrator — Quality]`, `[Orchestrator — PR]`, so readers see the pipeline progress.
+- **Right after Classify:** Call `add_comment` with label `[Orchestrator — Classify]` and the classification result. Then only proceed to Implement or Plan.
+- **Right after Plan (if you did a plan):** Call `add_comment` with `[Orchestrator — Plan]` and the plan summary. Then only proceed to Implement.
+- **Right after Implement:** Call `add_comment` with `[Orchestrator — Development]` and what was implemented (files, summary). Then only proceed to Quality.
+- **Right after Quality:** Call `add_comment` with `[Orchestrator — Quality]` and lint/test/build result. Then only proceed to Create PR.
+- **After Create PR:** Call `add_comment` with `[Orchestrator — PR]` + PR title and link; then call `transition_issue`.
+
+Use the **same jira_key** (from workflow inputs) for every `add_comment` call. Use clear labels so the ticket activity shows the pipeline step-by-step.
 
 ## Step 1 — Classify
 
@@ -47,7 +49,7 @@ From the task title and description, choose **one**:
 
 You do **not** run separate "Strategy" or "Architecture" phases as separate agents. If scope is clear, go straight to implementation. If unclear, write 2–3 sentences of plan, then implement.
 
-**Then:** Post a Jira comment via MCP (`add_comment`) summarizing the classification (e.g. "[Orchestrator — Classify] Task classified as: Simple feature. Proceeding to implementation.").
+**STOP and do this before any other work:** Call Jira MCP **add_comment** for the issue (use jira_key from inputs). Body: `[Orchestrator — Classify] Task classified as: Simple feature. Proceeding to implementation.` (or your actual classification). Do not proceed to Implement or Plan until this comment is posted.
 
 ## Step 2 — Plan (only when needed)
 
@@ -57,7 +59,7 @@ If the task is unclear or missing acceptance criteria:
 - Map to the repo (e.g. "Create `src/components/Header.tsx`, update `App.tsx`").
 - Then proceed to Implement. Do not over-specify; the Development instructions cover quality.
 
-**Then:** Post a Jira comment via MCP with the plan summary (e.g. "[Orchestrator — Plan] Will add Header component, mount in App, add nav links.").
+**STOP and do this before Implement:** Call Jira MCP **add_comment** with `[Orchestrator — Plan]` + your plan summary. Do not proceed until this comment is posted.
 
 ## Step 3 — Implement
 
@@ -68,7 +70,7 @@ Follow the **Development agent** instructions in `.github/agents/development.age
 - Run lint and tests if present; fix any failures before creating the PR.
 - One logical change per run; one PR.
 
-**Then:** Post a Jira comment via MCP summarizing what was implemented (e.g. "[Orchestrator — Development] Implementation complete. Files: ...").
+**STOP and do this before Quality:** Call Jira MCP **add_comment** with `[Orchestrator — Development]` + what was implemented (files changed, summary). Do not proceed to Quality until this comment is posted.
 
 ## Step 4 — Quality
 
@@ -76,7 +78,7 @@ Follow the **Quality agent** instructions in `.github/agents/quality.agent.md`:
 
 - Run the project's lint, test, and build (using existing scripts in package.json). Summarize: pass/fail for each.
 - If something fails, fix only trivial issues; otherwise note in the summary and proceed.
-- Post a Jira comment via MCP: `[Orchestrator — Quality]` + short result (e.g. "Lint: pass. Test: pass. Build: pass. Quality gate: passed." or "Lint: pass. Test: 1 failed (…). Build: pass. Proceeding; see PR for details.").
+**STOP and do this before Create PR:** Call Jira MCP **add_comment** with `[Orchestrator — Quality]` + short result (e.g. "Lint: pass. Test: pass. Build: pass. Quality gate: passed."). Do not proceed to Create PR until this comment is posted.
 
 ## Step 5 — Create PR
 
@@ -85,7 +87,7 @@ Follow the **Quality agent** instructions in `.github/agents/quality.agent.md`:
 - PR title: `[jira] <Jira key>: <short title>`.
 - PR body: task description + list of changes + link to Jira if you have the base URL. Optionally add a "Pipeline state" section summarizing each phase (Classify, Plan if any, Development, PR).
 
-**Then:** Post a final Jira comment via MCP with PR title and link, and that the issue is being moved to Code Review; then call **transition_issue** to move the issue to Code Review.
+**Then:** Call Jira MCP **add_comment** with `[Orchestrator — PR]` + PR title and link + "Moving to Code Review." After that, call **transition_issue** to move the issue to Code Review.
 
 ## What you do NOT do
 
