@@ -24,15 +24,15 @@ Jira task (title + description)
 
 ## ⛔ MANDATORY: Comment in Jira after EVERY phase
 
-You **MUST** call the Jira MCP tool **add_comment** after **each** phase below, using the **jira_key** from the workflow inputs. Do **not** skip any comment. Do **not** wait until the end to post all comments. The ticket must show separate comments for: Classify → (Plan if any) → Development → Quality → PR.
+You **MUST** call the Atlassian MCP tool **mcp__atlassian__jira_add_comment** after **each** phase below, using the **jira_key** from the workflow inputs. Do **not** skip any comment. Do **not** wait until the end to post all comments. The ticket must show separate comments for: Classify → (Plan if any) → Development → Quality → PR.
 
-**Order of operations:** Complete one phase → **immediately** call `add_comment` with the jira_key and the text for that phase → **only then** proceed to the next phase. If you do not post a comment after a phase, the run is incomplete.
+**Order of operations:** Complete one phase → **immediately** call **mcp__atlassian__jira_add_comment** with `issue_key` = jira_key and `body` = the text for that phase (Markdown) → **only then** proceed to the next phase. If you do not post a comment after a phase, the run is incomplete.
 
-- **Right after Classify:** Call `add_comment` with label `[Orchestrator — Classify]` and the classification result. Then only proceed to Implement or Plan.
-- **Right after Plan (if you did a plan):** Call `add_comment` with `[Orchestrator — Plan]` and the plan summary. Then only proceed to Implement.
-- **Right after Implement:** Call `add_comment` with `[Orchestrator — Development]` and what was implemented (files, summary). Then only proceed to Quality.
-- **Right after Quality:** Call `add_comment` with `[Orchestrator — Quality]` and lint/test/build result. Then only proceed to Create PR.
-- **After Create PR:** Call `add_comment` with `[Orchestrator — PR]` + PR title and link; then call `transition_issue`.
+- **Right after Classify:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Classify]` + classification result. Then only proceed to Implement or Plan.
+- **Right after Plan (if you did a plan):** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Plan]` + plan summary. Then only proceed to Implement.
+- **Right after Implement:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Development]` + what was implemented (files, summary). Then only proceed to Quality.
+- **Right after Quality:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Quality]` + lint/test/build result. Then only proceed to Create PR.
+- **After Create PR:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — PR]` + PR title and link; then call **mcp__atlassian__jira_transition_issue** with `issue_key` and `transition_id` = `2` (Code Review).
 
 Use the **same jira_key** (from workflow inputs) for every `add_comment` call. Use clear labels so the ticket activity shows the pipeline step-by-step.
 
@@ -49,7 +49,7 @@ From the task title and description, choose **one**:
 
 You do **not** run separate "Strategy" or "Architecture" phases as separate agents. If scope is clear, go straight to implementation. If unclear, write 2–3 sentences of plan, then implement.
 
-**STOP and do this before any other work:** Call Jira MCP **add_comment** for the issue (use jira_key from inputs). Body: `[Orchestrator — Classify] Task classified as: Simple feature. Proceeding to implementation.` (or your actual classification). Do not proceed to Implement or Plan until this comment is posted.
+**STOP and do this before any other work:** Call **mcp__atlassian__jira_add_comment** with `issue_key` = jira_key from inputs, `body` = `[Orchestrator — Classify] Task classified as: Simple feature. Proceeding to implementation.` (or your actual classification). Do not proceed to Implement or Plan until this comment is posted.
 
 ## Step 2 — Plan (only when needed)
 
@@ -59,7 +59,7 @@ If the task is unclear or missing acceptance criteria:
 - Map to the repo (e.g. "Create `src/components/Header.tsx`, update `App.tsx`").
 - Then proceed to Implement. Do not over-specify; the Development instructions cover quality.
 
-**STOP and do this before Implement:** Call Jira MCP **add_comment** with `[Orchestrator — Plan]` + your plan summary. Do not proceed until this comment is posted.
+**STOP and do this before Implement:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Plan]` + your plan summary. Do not proceed until this comment is posted.
 
 ## Step 3 — Implement
 
@@ -70,7 +70,7 @@ Follow the **Development agent** instructions in `.github/agents/development.age
 - Run lint and tests if present; fix any failures before creating the PR.
 - One logical change per run; one PR.
 
-**STOP and do this before Quality:** Call Jira MCP **add_comment** with `[Orchestrator — Development]` + what was implemented (files changed, summary). Do not proceed to Quality until this comment is posted.
+**STOP and do this before Quality:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Development]` + what was implemented (files changed, summary). Do not proceed to Quality until this comment is posted.
 
 ## Step 4 — Quality
 
@@ -78,7 +78,7 @@ Follow the **Quality agent** instructions in `.github/agents/quality.agent.md`:
 
 - Run the project's lint, test, and build (using existing scripts in package.json). Summarize: pass/fail for each.
 - If something fails, fix only trivial issues; otherwise note in the summary and proceed.
-**STOP and do this before Create PR:** Call Jira MCP **add_comment** with `[Orchestrator — Quality]` + short result (e.g. "Lint: pass. Test: pass. Build: pass. Quality gate: passed."). Do not proceed to Create PR until this comment is posted.
+**STOP and do this before Create PR:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Quality]` + short result (e.g. "Lint: pass. Test: pass. Build: pass. Quality gate: passed."). Do not proceed to Create PR until this comment is posted.
 
 ## Step 5 — Create PR
 
@@ -87,7 +87,7 @@ Follow the **Quality agent** instructions in `.github/agents/quality.agent.md`:
 - PR title: `[jira] <Jira key>: <short title>`.
 - PR body: task description + list of changes + link to Jira if you have the base URL. Optionally add a "Pipeline state" section summarizing each phase (Classify, Plan if any, Development, PR).
 
-**Then:** Call Jira MCP **add_comment** with `[Orchestrator — PR]` + PR title and link + "Moving to Code Review." After that, call **transition_issue** to move the issue to Code Review.
+**Then:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — PR]` + PR title and link + "Moving to Code Review." After that, call **mcp__atlassian__jira_transition_issue** with `issue_key` and `transition_id` = `2` to move the issue to Code Review.
 
 ## What you do NOT do
 

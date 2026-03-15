@@ -15,8 +15,10 @@ Use the **"Test Jira MCP"** agentic workflow to verify that the Jira MCP server 
 3. Enter a Jira issue key (e.g. `DEV-1`).
 4. Run.
 
-- **Success:** The agent calls `mcp__jira__add_comment`, and a comment `[MCP test] Jira MCP add_comment succeeded.` appears on the issue. So MCP is available and auth works.
-- **"Jira MCP is not available"** in the agent log: The Jira MCP server did not register (see section below on that message). Check "Start MCP Gateway" step and MCP logs.
+- **Success:** The agent calls `mcp__atlassian__jira_add_comment`, and a comment `[MCP test] Jira MCP add_comment succeeded.` appears on the issue. So MCP is available and auth works.
+- **"Jira MCP is not available"** in the agent log: The Atlassian MCP server did not register. Check "Start MCP Gateway" step and MCP logs.
+
+**Note:** The workflow uses the **mcp/atlassian** Docker image (not the npx-based OrenGrinker server), so no "npm could not determine executable" errors. Tools: `mcp__atlassian__jira_add_comment`, `mcp__atlassian__jira_transition_issue`.
 - **Tool call error** (e.g. 401, 403): Credentials or permissions; fix `JIRA_EMAIL` / `JIRA_API_TOKEN` or project permissions.
 
 ### Test credentials and network (without MCP)
