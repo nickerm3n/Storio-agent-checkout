@@ -19,6 +19,42 @@ body {
   margin: 0 auto;
 }
 
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.app-name {
+  color: #f9fafb;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.app-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.app-nav a {
+  color: #93c5fd;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.app-nav a:hover {
+  color: #bfdbfe;
+}
+
 .page-header {
   display: flex;
   flex-direction: column;
@@ -94,5 +130,10 @@ h1 {
 @media (max-width: 640px) {
   .page {
     padding-inline: 1.1rem;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
