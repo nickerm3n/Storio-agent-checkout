@@ -96,3 +96,43 @@ h1 {
     padding-inline: 1.1rem;
   }
 }
+
+/* App header / navigation bar */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.app-header__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f9fafb;
+  letter-spacing: -0.01em;
+}
+
+.app-header__nav {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-header__link {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.app-header__link:hover {
+  color: #f9fafb;
+}
+
+@media (max-width: 640px) {
+  .app-header__nav {
+    gap: 1rem;
+  }
+}

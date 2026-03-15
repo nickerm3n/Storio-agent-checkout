@@ -1,8 +1,10 @@
 import React from "react"
+import { AppHeader } from "../components/AppHeader"
 
 export function App() {
   return (
     <div className="page">
+      <AppHeader />
       <header className="page-header">
         <span className="badge">PoC</span>
         <h1>Checkout Agent Sandbox</h1>
