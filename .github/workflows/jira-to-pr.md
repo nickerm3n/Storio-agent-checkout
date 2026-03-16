@@ -42,12 +42,9 @@ mcp-servers:
       - jira_add_comment
       - jira_transition_issue
 
-  # Playwright MCP server from https://github.com/microsoft/playwright-mcp
+  # Playwright MCP server (Docker image from https://github.com/microsoft/playwright-mcp)
   playwright:
-    command: "npx"
-    args:
-      - "@playwright/mcp@latest"
-      # по желанию: "--headless", "--test-id-attribute=data-test"
+    container: "mcr.microsoft.com/playwright/mcp"
     allowed:
       - browser_navigate
       - browser_snapshot

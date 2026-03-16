@@ -23,7 +23,7 @@
 #
 # Agentic workflow: Jira ticket assigned to bot → GitHub Agent creates a Pull Request and notifies Jira via MCP (comment + transition). Trigger via Jira Automation or manually.
 #
-# gh-aw-metadata: {"schema_version":"v2","frontmatter_hash":"98030b06dd48ce7cd2b0f501d8b2be843d4f85df2f0ab4b24632a68e7311515a","compiler_version":"v0.57.2","strict":true}
+# gh-aw-metadata: {"schema_version":"v2","frontmatter_hash":"9a5eac3a67a9b624e4efba2414f78fc2d7df5db8d4a93b16ef341ed762d3a1b7","compiler_version":"v0.57.2","strict":true}
 
 name: "Jira → Pull Request (Orchestrator + Development)"
 "on":
@@ -690,8 +690,7 @@ jobs:
                 "entrypointArgs": [
                   "--output-dir",
                   "/tmp/gh-aw/mcp-logs/playwright",
-                  "--no-sandbox",
-                  "@playwright/mcp@latest"
+                  "--no-sandbox"
                 ],
                 "mounts": ["/tmp/gh-aw/mcp-logs:/tmp/gh-aw/mcp-logs:rw"]
               },
