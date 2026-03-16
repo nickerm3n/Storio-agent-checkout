@@ -1,7 +1,10 @@
 import React from "react"
+import { Header } from "../components/Header"
 
 export function App() {
   return (
+    <>
+    <Header />
     <div className="page">
       <header className="page-header">
         <span className="badge">PoC</span>
@@ -30,5 +33,6 @@ export function App() {
         </section>
       </main>
     </div>
+    </>
   )
 }
