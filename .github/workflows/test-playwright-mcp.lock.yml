@@ -23,14 +23,14 @@
 #
 # Smoke test: use Playwright MCP to open a page and take a screenshot.
 #
-# gh-aw-metadata: {"schema_version":"v2","frontmatter_hash":"060440f2e3abbeb7e5d1456d93d6a29188cebde2d7d350ade085cb3ae1a43a47","compiler_version":"v0.57.2","strict":true}
+# gh-aw-metadata: {"schema_version":"v2","frontmatter_hash":"88a1c1e1de3b5560da2e879af4ecae4333824aed6b7c7936ed28f82e1fa18f2c","compiler_version":"v0.57.2","strict":true}
 
 name: "Test Playwright MCP"
 "on":
   workflow_dispatch:
     inputs:
       url:
-        description: URL to open (e.g. http://localhost:4173/ or a deployed preview URL)
+        description: URL to open (e.g. http://localhost:5173/ or a deployed preview URL)
         required: true
         type: string
 
