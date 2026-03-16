@@ -31,17 +31,13 @@ engine: claude
 
 You have **one task only**. Do nothing else.
 
-1. **Install dependencies and start the app** using the Bash tool — in this exact order:
-   - From the repo root:
-     1. Run `npm ci || npm install`. Wait for the command to finish completely; do not continue until dependencies are installed.
-     2. Start the dev server in the background: `npm run dev -- --host 0.0.0.0`.  
-   - After starting the server, **wait until** `http://localhost:5173/` is actually responding:
-     - periodically call Bash with `curl -s -o /dev/null -w "%{http_code}" http://localhost:5173/` (or an equivalent command);
-     - only continue when the HTTP status code is `200`.  
-   - If the server does not start (several attempts and still no `200`), print `"Dev server on http://localhost:5173/ did not start successfully"` and stop. **Do not** fall back to any other URLs (such as `http://example.com/`).
+1. Assume the target application is **already deployed and reachable** at the URL passed in the workflow input `url` (for example a GitHub Pages / preview / production URL).  
+   - **Do not** try to install dependencies or start a dev server yourself.  
+   - **Do not** call Bash to run `npm run dev`, `curl localhost`, or anything similar.
 
-2. Once the server consistently responds on `http://localhost:5173/`, use **only this URL** with Playwright MCP:
-   - Call **mcp__playwright__browser_navigate** with `url` = `${{ github.event.inputs.url }}` (for the local dev server, this should be `http://localhost:5173/`);
+2. Use Playwright MCP to open the provided URL and take a screenshot:
+   - Call **mcp__playwright__browser_navigate** with:
+     - `url` = `${{ github.event.inputs.url }}`.
    - Then call **mcp__playwright__browser_take_screenshot** with:
      - `type`: `"png"`;
      - optionally `fullPage`: `true`.  
