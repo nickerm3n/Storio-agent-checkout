@@ -42,11 +42,23 @@ mcp-servers:
       - jira_add_comment
       - jira_transition_issue
 
-# Allow Jira MCP to call Atlassian API (otherwise add_comment/transition_issue are blocked by sandbox)
+  # Playwright MCP server from https://github.com/microsoft/playwright-mcp
+  playwright:
+    command: "npx"
+    args:
+      - "@playwright/mcp@latest"
+      # по желанию: "--headless", "--test-id-attribute=data-test"
+    allowed:
+      - browser_navigate
+      - browser_snapshot
+      - browser_take_screenshot
+
+# Allow Jira MCP and Playwright to call external services
 network:
   allowed:
     - defaults
     - "*.atlassian.net"
+    - "localhost"
 
 engine: claude
 ---

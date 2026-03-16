@@ -17,7 +17,9 @@ You implement the task from the Jira ticket: write code, add tests if the stack 
 ## Implementation flow
 
 1. **Locate** — Find where the task applies (e.g. main page, existing components, test folder).
-2. **Implement** — Add or change only what’s needed for the acceptance criteria. Prefer minimal, focused edits.
+2. **Implement** — Add or change only what’s needed for the acceptance criteria. Prefer minimal, focused edits.  
+   - For every new visible UI feature, add a **stable data-test selector** on its root element so visual tools can target it, e.g.:  
+     `data-test="${jiraKey}-header"` (for DEV-7 header), `data-test="${jiraKey}-empty-state"`, etc.
 3. **Test/Lint** — Run `npm run lint`, `npm test`, `npm run build` (or equivalent) if they exist. Fix failures.
 4. **Hand off** — The workflow will create the PR via safe output; ensure your edits are committed and the PR description lists the changes.
 

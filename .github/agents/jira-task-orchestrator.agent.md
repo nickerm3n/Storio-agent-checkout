@@ -11,7 +11,7 @@ You run inside a **single** GitHub Actions agentic workflow. You receive a Jira 
 ```
 Jira task (title + description)
     ↓
-1. Classify task     → post comment in Jira (MCP add_comment)
+1. Classify task     → post comment in Jira (MCP)
     ↓
 2. Plan (optional)   → if done, post comment in Jira
     ↓
@@ -19,7 +19,9 @@ Jira task (title + description)
     ↓
 4. Quality           → run lint/test/build; post comment in Jira
     ↓
-5. Create PR         → post final comment + transition (MCP)
+5. Visual check      → use Playwright MCP screenshot for the implemented feature
+    ↓
+6. Create PR         → post final comment + transition (MCP)
 ```
 
 ## ⛔ MANDATORY: Comment in Jira after EVERY phase
@@ -80,7 +82,24 @@ Follow the **Quality agent** instructions in `.github/agents/quality.agent.md`:
 - If something fails, fix only trivial issues; otherwise note in the summary and proceed.
 **STOP and do this before Create PR:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Quality]` + short result (e.g. "Lint: pass. Test: pass. Build: pass. Quality gate: passed."). Do not proceed to Create PR until this comment is posted.
 
-## Step 5 — Create PR
+## Step 5 — Visual check (Playwright)
+
+Use the **Playwright MCP** server (`@playwright/mcp`) to capture a screenshot of the implemented feature:
+
+- Determine the URL to test (usually your app’s dev/preview URL, e.g. `http://localhost:4173/`, or as specified in the Jira task).
+- Choose a **stable selector** for the new feature:
+  - Prefer the `data-test` selector you added during implementation, e.g. `[data-test="${jiraKey}-header"]` for DEV-7 header, or `[data-test="${jiraKey}-empty-state"]` for an empty-state feature.
+  - If no `data-test` exists, choose the most stable locator based on text/role that uniquely identifies the feature.
+- Use Playwright MCP in два шага:
+  1. Call **mcp__playwright__browser_navigate** with the page URL to open the app.
+  2. When the page is ready, call **mcp__playwright__browser_take_screenshot** with:
+     - `filename`: a relative file name like `screenshots/${jiraKey}-feature.png`;
+     - optionally `fullPage: true` или описание элемента через snapshot (по необходимости).
+- Use the screenshot file name/path in your Jira comment so reviewers know where to find the screenshot (PR artifacts or repo path).
+
+After the screenshot is captured, call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Visual] Screenshot captured for selector <your-selector>. See PR artifacts or linked attachment.` Then continue to Create PR.
+
+## Step 6 — Create PR
 
 - Use the **create-pull-request** safe output.
 - Branch: e.g. `jira/DEV-123-add-header`.
