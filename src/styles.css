@@ -91,6 +91,50 @@ h1 {
   color: #60a5fa;
 }
 
+/* ── Site Header ───────────────────────────────────────────────── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: rgba(5, 7, 22, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.site-header__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #f9fafb;
+}
+
+.site-header__nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.site-header__link {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.site-header__link:hover {
+  color: #f9fafb;
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    padding-inline: 1.1rem;
+  }
+}
+
 @media (max-width: 640px) {
   .page {
     padding-inline: 1.1rem;
