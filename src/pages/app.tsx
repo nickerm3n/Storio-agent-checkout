@@ -1,7 +1,10 @@
 import React from "react"
+import { AppHeader } from "../components/AppHeader"
 
 export function App() {
   return (
+    <>
+    <AppHeader />
     <div className="page">
       <header className="page-header">
         <span className="badge">PoC</span>
@@ -30,5 +33,6 @@ export function App() {
         </section>
       </main>
     </div>
+    </>
   )
 }
