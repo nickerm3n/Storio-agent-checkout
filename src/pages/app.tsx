@@ -1,8 +1,10 @@
 import React from "react"
+import { Header } from "../components/Header"
 
 export function App() {
   return (
     <div className="page">
+      <Header />
       <header className="page-header">
         <span className="badge">PoC</span>
         <h1>Checkout Agent Sandbox</h1>
