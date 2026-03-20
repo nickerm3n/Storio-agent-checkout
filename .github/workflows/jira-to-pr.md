@@ -57,9 +57,7 @@ network:
     - "*.atlassian.net"
     - "localhost"
 
-engine:
-  id: claude
-  model: haiku
+engine: copilot
 ---
 
 # Jira → Pull Request (Orchestrator + Development)
