@@ -57,7 +57,9 @@ network:
     - "*.atlassian.net"
     - "localhost"
 
-engine: copilot
+engine:
+  id: claude
+  model: haiku
 ---
 
 # Jira → Pull Request (Orchestrator + Development)
@@ -129,6 +131,6 @@ ${{ github.event.inputs.description }}
 - **CLI:** `gh workflow run "jira-to-pr.lock.yml" -f jira_key=BUY-505 -f title="Add tests" -f description="Add unit tests for checkout"`  
   Or: `gh aw run jira-to-pr` (if your gh-aw version supports passing inputs).
 
-**Engine:** Uses `engine: copilot` (GitHub Copilot CLI). For Claude instead, set `engine: claude` and **ANTHROPIC_API_KEY** secret (Anthropic account must have credits).
+**Engine:** Uses `engine: claude` (Claude Code). For a different Claude model, adjust `model:` and ensure you have **ANTHROPIC_API_KEY** secret (Anthropic account must have credits).
 
 **Jira MCP:** Uses the **mcp/atlassian** Docker image (tools: `jira_add_comment`, `jira_transition_issue`). Env: `JIRA_URL`, `JIRA_USERNAME` (= JIRA_EMAIL), `JIRA_API_TOKEN`. Ensure repo secrets `JIRA_EMAIL` and `JIRA_API_TOKEN` are set. If you want only MCP (no duplicate), you can disable the "Notify Jira on PR" workflow.
