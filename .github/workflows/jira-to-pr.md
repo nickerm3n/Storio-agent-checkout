@@ -57,7 +57,7 @@ network:
     - "*.atlassian.net"
     - "localhost"
 
-engine: claude
+engine: copilot
 ---
 
 # Jira → Pull Request (Orchestrator + Development)
@@ -86,29 +86,29 @@ ${{ github.event.inputs.description }}
 
 ## Your run
 
-**CRITICAL — Jira comments per phase:** You MUST call **mcp__atlassian__jira_add_comment** (with `issue_key` = jira_key from inputs, `body` = Markdown text) **immediately after each** of steps 1–4, **before** moving to the next step. Do not batch all comments at the end. The ticket must show 4–5 separate comments (Classify, optional Plan, Development, Quality, PR). If you skip a comment, the run is incomplete.
+**CRITICAL — Jira comments per phase:** You MUST call **mcp**atlassian**jira_add_comment** (with `issue_key` = jira_key from inputs, `body` = Markdown text) **immediately after each** of steps 1–4, **before** moving to the next step. Do not batch all comments at the end. The ticket must show 4–5 separate comments (Classify, optional Plan, Development, Quality, PR). If you skip a comment, the run is incomplete.
 
 1. **Classify** — Decide: simple feature / bug fix / unclear scope / docs-only.  
-   → **Right away:** Call **mcp__atlassian__jira_add_comment** with `issue_key` = ${{ github.event.inputs.jira_key }}, `body` = `[Orchestrator — Classify]` + classification result. **Do not proceed to step 2 or 3 until this comment is posted.**
+   → **Right away:** Call **mcp**atlassian**jira_add_comment** with `issue_key` = ${{ github.event.inputs.jira_key }}, `body` = `[Orchestrator — Classify]` + classification result. **Do not proceed to step 2 or 3 until this comment is posted.**
 
 2. **Plan (if needed)** — If scope is vague, write 2–3 sentences of what you will deliver and where.  
-   → **Right away:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Plan]` + plan summary. **Do not proceed to step 3 until this comment is posted.**
+   → **Right away:** Call **mcp**atlassian**jira_add_comment** with `body`: `[Orchestrator — Plan]` + plan summary. **Do not proceed to step 3 until this comment is posted.**
 
 3. **Implement** — Follow Development agent: implement acceptance criteria, fix failures.  
-   → **Right away:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Development]` + what was implemented (files, summary). **Do not proceed to step 4 until this comment is posted.**
+   → **Right away:** Call **mcp**atlassian**jira_add_comment** with `body`: `[Orchestrator — Development]` + what was implemented (files, summary). **Do not proceed to step 4 until this comment is posted.**
 
 4. **Quality** — Run lint, test, build (existing scripts); summarize pass/fail.  
-   → **Right away:** Call **mcp__atlassian__jira_add_comment** with `body`: `[Orchestrator — Quality]` + result (e.g. "Lint: pass. Test: pass. Build: pass."). **Do not proceed to step 5 until this comment is posted.**
+   → **Right away:** Call **mcp**atlassian**jira_add_comment** with `body`: `[Orchestrator — Quality]` + result (e.g. "Lint: pass. Test: pass. Build: pass."). **Do not proceed to step 5 until this comment is posted.**
 
 5. **Create PR** — Use the create-pull-request safe output:
    - Branch: e.g. `jira/${{ github.event.inputs.jira_key }}-add-header`.
    - Title: `[jira] ${{ github.event.inputs.jira_key }}: <short title from task>`.
    - Body: full task description + list of changes + optional "Pipeline state" (Classify → Plan if any → Development → Quality → PR). Include Jira link if you have the base URL.
 
-6. **Final Jira update via MCP** — Use the **Atlassian MCP** (tools: **mcp__atlassian__jira_add_comment**, **mcp__atlassian__jira_transition_issue**):
+6. **Final Jira update via MCP** — Use the **Atlassian MCP** (tools: **mcp**atlassian**jira_add_comment**, **mcp**atlassian**jira_transition_issue**):
    - **jira_add_comment** — `issue_key` = jira_key from inputs, `body` = `[Orchestrator — PR]` Pull request created: [title](link). Moving to Code Review.
    - **jira_transition_issue** — `issue_key` = jira_key, `transition_id` = `2` (Code Review). Optional `comment` in Markdown.
-   If MCP fails, note it in the PR description; a separate workflow may still post to Jira as fallback.
+     If MCP fails, note it in the PR description; a separate workflow may still post to Jira as fallback.
 
 7. If the task cannot be done (blocker, missing info), explain in the PR description and still open the PR (fallback-as-issue may apply). Optionally post a Jira comment that the task could not be completed and why.
 
@@ -129,6 +129,6 @@ ${{ github.event.inputs.description }}
 - **CLI:** `gh workflow run "jira-to-pr.lock.yml" -f jira_key=BUY-505 -f title="Add tests" -f description="Add unit tests for checkout"`  
   Or: `gh aw run jira-to-pr` (if your gh-aw version supports passing inputs).
 
-**Engine:** Uses `engine: codex` (GitHub Copilot). For Claude instead, set `engine: claude` and **ANTHROPIC_API_KEY** secret (Anthropic account must have credits).
+**Engine:** Uses `engine: copilot` (GitHub Copilot CLI). For Claude instead, set `engine: claude` and **ANTHROPIC_API_KEY** secret (Anthropic account must have credits).
 
 **Jira MCP:** Uses the **mcp/atlassian** Docker image (tools: `jira_add_comment`, `jira_transition_issue`). Env: `JIRA_URL`, `JIRA_USERNAME` (= JIRA_EMAIL), `JIRA_API_TOKEN`. Ensure repo secrets `JIRA_EMAIL` and `JIRA_API_TOKEN` are set. If you want only MCP (no duplicate), you can disable the "Notify Jira on PR" workflow.
