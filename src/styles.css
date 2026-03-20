@@ -1,3 +1,51 @@
+/* ── App header ────────────────────────────────────── */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: rgba(5, 7, 22, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.app-header__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #f9fafb;
+}
+
+.app-header__nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.app-header__nav-link {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.app-header__nav-link:hover {
+  color: #f9fafb;
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    padding-inline: 1.1rem;
+  }
+
+  .app-header__nav {
+    gap: 1rem;
+  }
+}
+
+/* ── Root ────────────────────────────────────────────── */
 :root {
   color-scheme: light dark;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
